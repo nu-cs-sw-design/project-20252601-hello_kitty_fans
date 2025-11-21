@@ -8,6 +8,15 @@ package presentation
     {
 
     }
+    
+    ~class LoginView
+    {
+
+    }
+    ~class SetupView
+    {
+        
+    }
     ~class ClosetView
     {
         
@@ -32,9 +41,24 @@ package presentation
     {
         
     }
+    ~class SettingView
+    {
+        
+    }
 
 }
+Main ..> HomeView
+Main ..> LoginView
 
+LoginView ..> SetupView
+HomeView --> ClosetView
+HomeView --> PersonView
+HomeView ..> TryOnView
+HomeView ..> SettingView
+TryOnView --> ClothesView
+TryOnView --> PersonView
+TryOnView --> SuggestionView
+TryOnView ..> PosesView
 package domain
 {
     +class Closet
@@ -47,11 +71,30 @@ package domain
         sn: SerialNumber
 
     }
+
+    +class PoseCollection
+    {
+
+    }
+
+    +class Pose{
+
+    }
+    +class AccountCollection
+    {
+
+    }
+    +class Account
+    {
+
+    }
+    
     +class SerialNumber
     {
         sn: String
     }
-    +class Spec
+
+    +class GarmentSpec
     {
 
     }
@@ -59,11 +102,19 @@ package domain
     {
 
     }
+    +class PoseDataMapper
+    {
+        
+    }
+    +class AccountDataMapper
+    {
+
+    }
 }
 
 package datasource
 {
-    +abstract class GarmentDataWriter
+    +abstract class DataWriter
     {
 
     }
@@ -78,18 +129,42 @@ package datasource
     {
 
     }
+    +class DatabasePoseDataWriter
+    {
+
+    }
+    +class DatabaseAccountDataWriter
+    {
+
+    }
 
     +class GarmentDTO
     {
         
     }
-    +interface GarmentDataLoader
+    +class PoseDTO
+    {
+
+    }
+    +class AccountDTO
+    {
+
+    }
+    +interface DataLoader
     {
 
     }
     +class DatabaseGarmentDataLoader
     {
-        
+
+    }
+    +class DatabasePoseDataLoader
+    {
+
+    }
+    +class DatabaseAccountDataLoader
+    {
+
     }
 
 }

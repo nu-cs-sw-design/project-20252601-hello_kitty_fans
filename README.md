@@ -1,7 +1,7 @@
-# Project: NAME
+# Project: Virtual Closet
 
 ## Contributors
-NAME, NAME, NAME
+Samantha Su, Dhriti Guddanti
 
 ## Dependencies
 - LANGUAGE AND VERSION

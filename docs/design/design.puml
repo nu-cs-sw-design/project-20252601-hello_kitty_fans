@@ -1,2 +1,96 @@
 @startuml
+package presentation
+{
+    +class Main{
+        +{static} main(args: String[])
+    }
+    ~class HomeView
+    {
+
+    }
+    ~class ClosetView
+    {
+        
+    }
+    ~class PersonView
+    {
+        
+    }
+    ~class TryOnView
+    {
+        
+    }
+    ~class ClothesView
+    {
+        
+    }
+    ~class SuggestionView
+    {
+        
+    }
+    ~class PosesView
+    {
+        
+    }
+
+}
+
+package domain
+{
+    +class Closet
+    {
+        garments: List<Garment>
+    }
+
+    +class Garment
+    {
+        sn: SerialNumber
+
+    }
+    +class SerialNumber
+    {
+        sn: String
+    }
+    +class Spec
+    {
+
+    }
+    +class GarmentDataMapper
+    {
+
+    }
+}
+
+package datasource
+{
+    +abstract class GarmentDataWriter
+    {
+
+    }
+    
+
+    +interface InventoryObserver
+    {
+
+    }
+
+    +class DatabaseGarmentDataWriter
+    {
+
+    }
+
+    +class GarmentDTO
+    {
+        
+    }
+    +interface GarmentDataLoader
+    {
+
+    }
+    +class DatabaseGarmentDataLoader
+    {
+        
+    }
+
+}
 @enduml

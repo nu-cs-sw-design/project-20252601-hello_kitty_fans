@@ -114,13 +114,30 @@ package domain
 
 package datasource
 {
-    +abstract class DataWriter
+    +abstract class GarmentDataWriter
+    {
+        observers: List<GarmentObserver>
+    }
+    
+    +abstract class PoseDataWriter
+    {
+        observers: List<PoseObserver>
+    }
+
+    +abstract class AccountDataWriter
+    {
+        observers: List<AccountObserver>
+    }
+
+    +interface GarmentObserver
     {
 
     }
-    
-
-    +interface InventoryObserver
+    +interface PoseObserver
+    {
+        
+    }
+    +interface AccountObserver
     {
 
     }
@@ -150,9 +167,17 @@ package datasource
     {
 
     }
-    +interface DataLoader
+    +interface GarmentDataLoader
     {
 
+    }
+    +interface PoseDataLoader
+    {
+
+    }
+    +interface AccountDataLoader
+    {
+        
     }
     +class DatabaseGarmentDataLoader
     {
@@ -168,4 +193,40 @@ package datasource
     }
 
 }
+
+GarmentDataWriter -->"*" GarmentObserver
+PoseDataWriter -->"*" PoseObserver
+AccountDataWriter -->"*" AccountObserver
+
+Closet ..|> GarmentObserver
+ClosetView ..|> GarmentObserver
+ClothesView ..|> GarmentObserver
+SuggestionView ..|> GarmentObserver
+
+PoseCollection ..|> PoseObserver
+PosesView ..|> PoseObserver
+
+AccountCollection ..|> AccountObserver
+LoginView ..|> AccountObserver
+SettingView ..|> AccountObserver
+
+GarmentDataWriter ..> GarmentDTO
+GarmentDataMapper ..> GarmentDTO
+GarmentDataLoader ..> GarmentDTO
+
+PoseDataWriter ..> PoseDTO
+PoseDataMapper ..> PoseDTO
+PoseDataLoader ..> PoseDTO
+
+AccountDataWriter ..> AccountDTO
+AccountDataMapper ..> AccountDTO
+AccountDataLoader ..> AccountDTO
+
+DatabaseGarmentDataWriter --|> GarmentDataWriter
+DatabasePoseDataWriter --|> PoseDataWriter
+DatabaseAccountDataWriter --|> AccountDataWriter
+
+DatabaseGarmentDataLoader ..|> GarmentDataLoader
+DatabasePoseDataLoader ..|> PoseDataLoader
+DatabaseAccountDataLoader ..> AccountDataLoader
 @enduml

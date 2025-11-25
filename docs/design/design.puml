@@ -52,7 +52,9 @@ package domain
 {
     +class Closet
     {
-        garments: List<Garment>
+        -clothes: List<Garment>
+        -loader: GarmentDataLoader
+        -saver: GarmentDataWriter
     }
 
     +class Garment
@@ -63,7 +65,9 @@ package domain
 
     +class PoseCollection
     {
-
+        -poses: List<Pose>
+        -loader: PoseDataLoader
+        -saver: PoseDataWriter
     }
 
     +class Pose{
@@ -71,7 +75,9 @@ package domain
     }
     +class AccountCollection
     {
-
+        -accounts: List<Account>
+        -loader: AccountDataLoader
+        -saver: AccountDataWriter
     }
     +class Account
     {
@@ -105,43 +111,73 @@ package datasource
 {
     +abstract GarmentDataWriter
     {
-        observers: List<GarmentObserver>
+        -observers: List<GarmentObserver>
+
+        +GarmentDataWriter()
+        +GarmentDataWriter(observers: List<GarmentObserver>)
+        +subscribe(o: GarmentObserver): void
+        +unsubscribe(o: GarmentObserver): void
+        #updateAll(): void
+
+        +{abstract} addGarment(GarmentDTO): void
+        +{abstract} removeGarment(GarmentDTO): boolean
     }
     
     +abstract PoseDataWriter
     {
-        observers: List<PoseObserver>
+        -observers: List<PoseObserver>
+
+        +PoseDataWriter()
+        +PoseDataWriter(observers: List<PoseObserver>)
+        +subscribe(o: PoseObserver): void
+        +unsubscribe(o: PoseObserver): void
+        #updateAll(): void
+
+        +{abstract} addPose(PoseDTO): void
+        +{abstract} removePose(PoseDTO): boolean
     }
 
     +abstract AccountDataWriter
     {
-        observers: List<AccountObserver>
+        -observers: List<AccountObserver>
+
+        +AccountDataWriter()
+        +AccountDataWriter(observers: List<AccountObserver>)
+        +subscribe(o: AccountObserver): void
+        +unsubscribe(o: AccountObserver): void
+        #updateAll(): void
+
+        +{abstract} addAccount(AccountDTO): void
+        +{abstract} removeAccount(AccountDTO): boolean
     }
 
     +interface GarmentObserver
     {
-
+        +{abstract}update(): void
     }
     +interface PoseObserver
     {
-        
+         +{abstract}update(): void
     }
     +interface AccountObserver
     {
-
+        +{abstract}update(): void
     }
 
     +class DatabaseGarmentDataWriter
     {
-
+        +addGarment(GarmentDTO): void
+        +removeGarment(GarmentDTO): boolean
     }
     +class DatabasePoseDataWriter
     {
-
+        +addPose(PoseDTO): void
+        +removePose(PoseDTO): boolean
     }
     +class DatabaseAccountDataWriter
     {
-
+        +addAccount(AccountDTO): void
+        +removeAccount(AccountDTO): boolean
     }
 
     +class GarmentDTO
@@ -158,27 +194,27 @@ package datasource
     }
     +interface GarmentDataLoader
     {
-
+        +{abstract} getNextGarment(): GarmentDTO
     }
     +interface PoseDataLoader
     {
-
+        +{abstract} getNextPose(): PoseDTO
     }
     +interface AccountDataLoader
     {
-        
+        +{abstract} getNextAccount(): AccountDTO
     }
     +class DatabaseGarmentDataLoader
     {
-
+        +getNextGarment(): GarmentDTO
     }
     +class DatabasePoseDataLoader
     {
-
+        +getNextPose(): PoseDTO
     }
     +class DatabaseAccountDataLoader
     {
-
+        +getNextAccount(): AccountDTO
     }
 
 }

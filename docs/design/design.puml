@@ -47,18 +47,7 @@ package presentation
     }
 
 }
-Main ..> HomeView
-Main ..> LoginView
 
-LoginView ..> SetupView
-HomeView --> ClosetView
-HomeView --> PersonView
-HomeView ..> TryOnView
-HomeView ..> SettingView
-TryOnView --> ClothesView
-TryOnView --> PersonView
-TryOnView --> SuggestionView
-TryOnView ..> PosesView
 package domain
 {
     +class Closet
@@ -114,17 +103,17 @@ package domain
 
 package datasource
 {
-    +abstract class GarmentDataWriter
+    +abstract GarmentDataWriter
     {
         observers: List<GarmentObserver>
     }
     
-    +abstract class PoseDataWriter
+    +abstract PoseDataWriter
     {
         observers: List<PoseObserver>
     }
 
-    +abstract class AccountDataWriter
+    +abstract AccountDataWriter
     {
         observers: List<AccountObserver>
     }
@@ -193,6 +182,53 @@ package datasource
     }
 
 }
+
+Main ..> HomeView
+Main ..> LoginView
+Main ..> GarmentDataWriter
+Main ..> PoseDataWriter
+Main ..> AccountDataWriter
+Main ..> GarmentDataLoader
+Main ..> PoseDataLoader
+Main ..> AccountDataLoader
+Main ..> DatabaseGarmentDataWriter
+Main ..> DatabasePoseDataWriter
+Main ..> DatabaseAccountDataWriter
+Main ..> DatabaseGarmentDataLoader
+Main ..> DatabasePoseDataLoader
+Main ..> DatabaseAccountDataLoader
+
+LoginView ..> SetupView
+LoginView ..> HomeView
+HomeView --> ClosetView
+HomeView --> PersonView
+HomeView ..> TryOnView
+HomeView ..> SettingView
+TryOnView --> ClothesView
+TryOnView --> PersonView
+TryOnView --> SuggestionView
+TryOnView ..> PosesView
+
+
+Closet -->"*" Garment
+Closet --> GarmentDataWriter
+Closet --> GarmentDataLoader
+Closet ..> GarmentDataMapper
+Closet ..> GarmentSpec
+Closet ..> SerialNumber
+
+PoseCollection -->"*" Pose
+PoseCollection --> PoseDataWriter
+PoseCollection --> PoseDataLoader
+PoseCollection ..> PoseDataMapper
+
+AccountCollection -->"*" Account
+AccountCollection --> AccountDataWriter
+AccountCollection --> AccountDataLoader
+AccountCollection ..> AccountDataMapper
+
+Garment --> GarmentSpec
+Garment --> SerialNumber
 
 GarmentDataWriter -->"*" GarmentObserver
 PoseDataWriter -->"*" PoseObserver

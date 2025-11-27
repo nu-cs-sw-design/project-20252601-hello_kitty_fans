@@ -6,28 +6,55 @@ package presentation
     }
     ~class HomeView
     {
-
+        -closet: Closet
+        -closetView: ClosetView
+        -personView: PersonView
+        +HomeView(c: Closet)
+        +update(): void
+        -displayAddGarmentOption(): void
+        -displayFavoriteOption(): void
+        -displaySettingOption(): void
     }
     
     ~class LoginView
     {
+        -accountCollection: AccountCollection
+        +LoginView(ac: AccountCollection): void
+        -promptForUserInput(): void
+        -checkAccount(): void
 
     }
     ~class SetupView
     {
+        -accountCollection: AccountCollection
+        +SetupView(ac: AccountCollection): void
+        -promptForUserInput(): void
+        -addUserPreference(): void
+
         
     }
     ~class ClosetView
     {
+        -closet: Closet
+        -personView: PersonView
+        -posesView: PosesView
+        +ClosetView(c: Closet, pev: PersonView, pov: PosesView)
+        -displayClothes(): void
+        -displaySuggestions(): void
         
     }
     ~class PersonView
     {
-        
+        -closet: Closet
+        +PersonView(): void
     }
     ~class TryOnView
     {
-        
+        -closet: Closet
+        -clothesView: ClothesView
+        -personView: PersonView
+        +TryOnView(c: Closet, cv: ClothesView)
+       
     }
     ~class ClothesView
     {

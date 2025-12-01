@@ -11,9 +11,10 @@ package presentation
         -personView: PersonView
         +HomeView(c: Closet)
         +update(): void
-        -displayAddGarmentOption(): void
-        -displayFavoriteOption(): void
-        -displaySettingOption(): void
+        -addGarment(): void
+        -addFavorite(): void
+        -displaySettings(): void
+        -displayTryOn(): void
     }
     
     ~class LoginView
@@ -22,6 +23,8 @@ package presentation
         +LoginView(ac: AccountCollection): void
         -promptForUserInput(): void
         -checkAccount(): void
+        -displaySetup(): void
+        -displayHome(): void
 
     }
     ~class SetupView
@@ -38,7 +41,7 @@ package presentation
         -closet: Closet
         -personView: PersonView
         -posesView: PosesView
-        +ClosetView(c: Closet, pev: PersonView, pov: PosesView)
+        +ClosetView(c: Closet)
         -displayClothes(): void
         -displaySuggestions(): void
         
@@ -46,31 +49,39 @@ package presentation
     ~class PersonView
     {
         -closet: Closet
-        +PersonView(): void
+        -poses: PoseCollection
+        +PersonView(c: Closet, p: PoseCollection): void
     }
     ~class TryOnView
     {
         -closet: Closet
         -clothesView: ClothesView
         -personView: PersonView
-        +TryOnView(c: Closet, cv: ClothesView)
+        -suggestionView: SuggestionView
+        +TryOnView(c: Closet)
+        -displayPoses(): void
        
     }
     ~class ClothesView
     {
-        
+        -closet: Closet
+        +ClosetView(c: Closet): void
     }
     ~class SuggestionView
     {
-        
+        -closet: Closet
+        -accountCollection: AccountCollection
+        +SuggestionView(c: Closet, ac: AccountCollection): void
     }
     ~class PosesView
     {
-        
+        -poses: PoseCollection
+        +PosesView(p: PoseCollection): void
     }
     ~class SettingView
     {
-        
+        -accountCollection: AccountCollection
+        +SettingView(ac: AccountCollection): void
     }
 
 }
@@ -246,7 +257,6 @@ package datasource
 
 }
 
-Main ..> HomeView
 Main ..> LoginView
 Main ..> GarmentDataWriter
 Main ..> PoseDataWriter

@@ -93,6 +93,7 @@ package domain
         -clothes: List<Garment>
         -loader: GarmentDataLoader
         -saver: GarmentDataWriter
+        +Closet(gl: GarmentDataLoader, gw: GarmentDataWriter): void
     }
 
     +class Garment
@@ -106,6 +107,7 @@ package domain
         -poses: List<Pose>
         -loader: PoseDataLoader
         -saver: PoseDataWriter
+        +PoseCollection(pl: PoseDataLoader, pw: PoseDataWriter): void
     }
 
     +class Pose{
@@ -116,6 +118,7 @@ package domain
         -accounts: List<Account>
         -loader: AccountDataLoader
         -saver: AccountDataWriter
+        +AccountCollection(al: AccountDataLoader, aw: AccountDataWriter): void
     }
     +class Account
     {
@@ -133,15 +136,18 @@ package domain
     }
     +class GarmentDataMapper
     {
+        +{static} createGarment(GarmentDTO): Garment
 
     }
     +class PoseDataMapper
     {
-        
+        +{static} createPose(PoseDTO): Pose
+
     }
     +class AccountDataMapper
     {
-
+        +{static} createAccount(AccountDTO): Account
+        
     }
 }
 

@@ -20,7 +20,8 @@ package presentation
     ~class LoginView
     {
         -accountCollection: AccountCollection
-        +LoginView(ac: AccountCollection): void
+        +LoginView(ac: AccountCollection)
+        +update(): void
         -promptForUserInput(): void
         -checkAccount(): void
         -displaySetup(): void
@@ -30,7 +31,7 @@ package presentation
     ~class SetupView
     {
         -accountCollection: AccountCollection
-        +SetupView(ac: AccountCollection): void
+        +SetupView(ac: AccountCollection)
         -promptForUserInput(): void
         -addUserPreference(): void
 
@@ -42,6 +43,7 @@ package presentation
         -personView: PersonView
         -posesView: PosesView
         +ClosetView(c: Closet)
+        +update(): void
         -displayClothes(): void
         -displaySuggestions(): void
         
@@ -58,30 +60,40 @@ package presentation
         -clothesView: ClothesView
         -personView: PersonView
         -suggestionView: SuggestionView
-        +TryOnView(c: Closet)
+        -posesView: PosesView
+        +TryOnView(c: Closet, p: PoseCollection, ac: AccountCollection)
         -displayPoses(): void
+        -displayOutfitSuggestions(): void
        
     }
     ~class ClothesView
     {
         -closet: Closet
-        +ClosetView(c: Closet): void
+        +ClothesView(c: Closet)
+        +update(): void
+        -displayClothes(): void
     }
     ~class SuggestionView
     {
         -closet: Closet
         -accountCollection: AccountCollection
-        +SuggestionView(c: Closet, ac: AccountCollection): void
+        +SuggestionView(c: Closet, ac: AccountCollection)
+        +update(): void
+        -displaySuggestions(): void
     }
     ~class PosesView
     {
         -poses: PoseCollection
-        +PosesView(p: PoseCollection): void
+        +PosesView(p: PoseCollection)
+        +update(): void
+        -displayPoses(): void
     }
+
     ~class SettingView
     {
         -accountCollection: AccountCollection
-        +SettingView(ac: AccountCollection): void
+        +SettingView(ac: AccountCollection)
+        +update(): void
     }
 
 }
@@ -93,13 +105,25 @@ package domain
         -clothes: List<Garment>
         -loader: GarmentDataLoader
         -saver: GarmentDataWriter
-        +Closet(gl: GarmentDataLoader, gw: GarmentDataWriter): void
-    }
+        +Closet(gl: GarmentDataLoader, gw: GarmentDataWriter)
+       +add(sn: String, spec: GarmentSpec) <<throws>> IllegalArgumentException: void
+        +remove(sn: SerialNumber): boolean
+        +search(spec: GarmentSpec): Set<Garment>
 
+        -snExists(sn: SerialNumber): boolean
+        -loadCloset(): void
+        +update(): void
+        +toString(): String
+    }
     +class Garment
     {
-        sn: SerialNumber
+        -sn: SerialNumber
+        -spec: GarmentSpec
 
+        +Garment(sn: SerialNumber, spec: GarmentSpec)
+        ~match(spec: GarmentSpec): boolean
+        ~isSameSN(sn: SerialNumber): boolean
+        +toString(): String
     }
 
     +class PoseCollection
@@ -107,53 +131,83 @@ package domain
         -poses: List<Pose>
         -loader: PoseDataLoader
         -saver: PoseDataWriter
-        +PoseCollection(pl: PoseDataLoader, pw: PoseDataWriter): void
+        +PoseCollection(pl: PoseDataLoader, pw: PoseDataWriter)
+
+        +addPose(p: Pose): void
+        +removePose(p: Pose): boolean
+        -loadPoses(): void
+        +update(): void
     }
 
     +class Pose{
-
+        -poseId: String
+        -name: String
+        +Pose(poseId: String, name: String)
+        +toString(): String
     }
     +class AccountCollection
     {
         -accounts: List<Account>
         -loader: AccountDataLoader
         -saver: AccountDataWriter
-        +AccountCollection(al: AccountDataLoader, aw: AccountDataWriter): void
+        +AccountCollection(al: AccountDataLoader, aw: AccountDataWriter)
+        +addAccount(a: Account): void
+        +removeAccount(a: Account): boolean
+        +findAccount(username: String, password: String): Account
+        -loadAccounts(): void
+        +update(): void
     }
     +class Account
     {
+        -username: String
+        -passwordHash: String
 
+        +Account(username: String, passwordHash: String)
+        +toString(): String
     }
     
     +class SerialNumber
     {
-        sn: String
+        -sn: String
+        +SerialNumber(sn: String) <<throws>> IllegalArgumentException
+        -validateSNFormat(): boolean
+        ~isSameSN(sn: SerialNumber): boolean
+        +toString(): String
     }
 
     +class GarmentSpec
     {
+        -category: String
+        -color: String
+        -size: String
+        -season: String
+        -style: String
 
+        +GarmentSpec(category: String, color: String, size: String, season: String, style: String)
+        ~match(other: GarmentSpec): boolean
+        ~isComplete(): boolean
+        +toString(): String
     }
     +class GarmentDataMapper
     {
         +{static} createGarment(GarmentDTO): Garment
-
+        +{static} createGarmentDTO(g: Garment): GarmentDTO
     }
     +class PoseDataMapper
     {
         +{static} createPose(PoseDTO): Pose
-
+        +{static} createPoseDTO(p: Pose): PoseDTO
     }
     +class AccountDataMapper
     {
         +{static} createAccount(AccountDTO): Account
-        
+        +{static} createAccountDTO(a: Account): AccountDTO
     }
 }
 
 package datasource
 {
-    +abstract GarmentDataWriter
+    +abstract class GarmentDataWriter
     {
         -observers: List<GarmentObserver>
 
@@ -163,11 +217,11 @@ package datasource
         +unsubscribe(o: GarmentObserver): void
         #updateAll(): void
 
-        +{abstract} addGarment(GarmentDTO): void
-        +{abstract} removeGarment(GarmentDTO): boolean
+        +{abstract} addGarment(dto:GarmentDTO): void
+        +{abstract} removeGarment(dto:GarmentDTO): boolean
     }
     
-    +abstract PoseDataWriter
+    +abstract class PoseDataWriter
     {
         -observers: List<PoseObserver>
 
@@ -177,11 +231,11 @@ package datasource
         +unsubscribe(o: PoseObserver): void
         #updateAll(): void
 
-        +{abstract} addPose(PoseDTO): void
-        +{abstract} removePose(PoseDTO): boolean
+        +{abstract} addPose(dto:PoseDTO): void
+        +{abstract} removePose(dto:PoseDTO): boolean
     }
 
-    +abstract AccountDataWriter
+    +abstract class AccountDataWriter
     {
         -observers: List<AccountObserver>
 
@@ -191,8 +245,8 @@ package datasource
         +unsubscribe(o: AccountObserver): void
         #updateAll(): void
 
-        +{abstract} addAccount(AccountDTO): void
-        +{abstract} removeAccount(AccountDTO): boolean
+        +{abstract} addAccount(dto:AccountDTO): void
+        +{abstract} removeAccount(dto:AccountDTO): boolean
     }
 
     +interface GarmentObserver
@@ -210,30 +264,44 @@ package datasource
 
     +class DatabaseGarmentDataWriter
     {
-        +addGarment(GarmentDTO): void
-        +removeGarment(GarmentDTO): boolean
+        +addGarment(dto:GarmentDTO): void
+        +removeGarment(dto:GarmentDTO): boolean
     }
     +class DatabasePoseDataWriter
     {
-        +addPose(PoseDTO): void
-        +removePose(PoseDTO): boolean
+        +addPose(dto:PoseDTO): void
+        +removePose(dto:PoseDTO): boolean
     }
     +class DatabaseAccountDataWriter
     {
-        +addAccount(AccountDTO): void
-        +removeAccount(AccountDTO): boolean
+        +addAccount(dto:AccountDTO): void
+        +removeAccount(dto:AccountDTO): boolean
     }
 
     +class GarmentDTO
     {
-        
+        +{final} serialNumber: String
+        +{final} category: String
+        +{final} color: String
+        +{final} size: String
+        +{final} season: String
+        +{final} style: String
+
+        +GarmentDTO(String, String, String, String, String, String)
     }
     +class PoseDTO
     {
+        +{final} poseId: String
+        +{final} name: String
 
+        +PoseDTO(String, String)
     }
     +class AccountDTO
     {
+        +{final} username: String
+        +{final} passwordHash: String
+
+        +AccountDTO(String, String)
 
     }
     +interface GarmentDataLoader
@@ -343,5 +411,5 @@ DatabaseAccountDataWriter --|> AccountDataWriter
 
 DatabaseGarmentDataLoader ..|> GarmentDataLoader
 DatabasePoseDataLoader ..|> PoseDataLoader
-DatabaseAccountDataLoader ..> AccountDataLoader
+DatabaseAccountDataLoader ..|> AccountDataLoader
 @enduml

@@ -4,8 +4,12 @@ interface Props {
 
 export default function PoseViewer({ image }: Props) {
   return (
-    <div className="bg-gray-200 w-64 h-64 rounded flex items-center justify-center">
-      <img src={image} alt="pose" className="h-full object-contain" />
+    <div className="w-full h-full flex items-center justify-center">
+      <img
+        src={image}
+        alt="Pose"
+        className="max-h-full max-w-full object-contain rounded-lg"
+      />
     </div>
   );
 }

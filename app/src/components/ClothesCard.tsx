@@ -5,9 +5,13 @@ interface Props {
 
 export default function ClothesCard({ name, image }: Props) {
   return (
-    <div className="flex flex-col items-center p-2 bg-white rounded shadow">
-      <img src={image} alt={name} className="h-20 object-contain mb-2" />
-      <p className="text-sm">{name}</p>
+    <div className="flex flex-col items-center p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+      <img
+        src={image}
+        alt={name}
+        className="h-24 object-contain mb-3 rounded-md"
+      />
+      <p className="text-sm font-medium text-gray-800">{name}</p>
     </div>
   );
 }

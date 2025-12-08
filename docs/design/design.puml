@@ -255,7 +255,7 @@ package domain
 
     +class LookCollection{
         -looks: List<Look>
-        +addLook(l: look): void
+        +addLook(l: Look): void
         +removeLook(l: Look): boolean
         +getLooks(): List<Look>
     }
@@ -504,25 +504,4 @@ TryOnView --> LookCollection
 Account --> BrandPreference
 BrandPreference -->"*" Brand
 
-Main ..> NavigationController
-Main ..> TryOnController
-
-LoginView --> NavigationController
-SetupView --> NavigationController
-HomeView  --> NavigationController
-TryOnView --> NavigationController
-SettingView --> NavigationController
-
-TryOnView --> TryOnController
-
-NavigationController --> AccountCollection
-NavigationController --> Closet
-NavigationController --> PoseCollection
-NavigationController --> LookCollection
-NavigationController --> SuggestionStrategy
-
-TryOnController --> Closet
-TryOnController --> PoseCollection
-TryOnController --> LookCollection
-TryOnController --> SuggestionStrategy
 @enduml

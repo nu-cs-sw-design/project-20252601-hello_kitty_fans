@@ -77,7 +77,8 @@ package presentation
     {
         -closet: Closet
         -accountCollection: AccountCollection
-        +SuggestionView(c: Closet, ac: AccountCollection)
+        -strategy: SuggestionStrategy
+        +SuggestionView(c: Closet, ac: AccountCollection, s: SuggestionStrategy)
         +update(): void
         -displaySuggestions(): void
     }
@@ -202,6 +203,12 @@ package domain
     {
         +{static} createAccount(AccountDTO): Account
         +{static} createAccountDTO(a: Account): AccountDTO
+    }
+    +interface SuggestionStrategy{
+        +getSuggestions(c: Closet, ac: AccountCollection): List<Garment>
+    }
+    +class SimpleSuggestionStrategy{
+        +getSuggestions(c: Closet, ac: AccountCollection): List<Garment>
     }
 }
 
@@ -412,4 +419,7 @@ DatabaseAccountDataWriter --|> AccountDataWriter
 DatabaseGarmentDataLoader ..|> GarmentDataLoader
 DatabasePoseDataLoader ..|> PoseDataLoader
 DatabaseAccountDataLoader ..|> AccountDataLoader
+
+SimpleSuggestionStrategy ..|> SuggestionStrategy
+SuggestionView ..> SuggestionStrategy
 @enduml

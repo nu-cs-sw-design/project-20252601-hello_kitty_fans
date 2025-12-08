@@ -57,6 +57,7 @@ package presentation
     ~class TryOnView
     {
         -closet: Closet
+        -lookCollection: LookCollection
         -clothesView: ClothesView
         -personView: PersonView
         -suggestionView: SuggestionView
@@ -64,6 +65,7 @@ package presentation
         +TryOnView(c: Closet, p: PoseCollection, ac: AccountCollection)
         -displayPoses(): void
         -displayOutfitSuggestions(): void
+        -saveCurrentLook(): void
        
     }
     ~class ClothesView
@@ -120,6 +122,7 @@ package domain
     {
         -sn: SerialNumber
         -spec: GarmentSpec
+        -isFavorite: boolean
 
         +Garment(sn: SerialNumber, spec: GarmentSpec)
         ~match(spec: GarmentSpec): boolean
@@ -162,8 +165,9 @@ package domain
     {
         -username: String
         -passwordHash: String
+        -brandPreference: BrandPreference
 
-        +Account(username: String, passwordHash: String)
+        +Account(username: String, passwordHash: String, bp: BrandPreference)
         +toString(): String
     }
     
@@ -209,6 +213,33 @@ package domain
     }
     +class SimpleSuggestionStrategy{
         +getSuggestions(c: Closet, ac: AccountCollection): List<Garment>
+    }
+
+    +class Look{
+        -id: String
+        -garments: List<Garment>
+        -pose: Pose
+        +Look(id: String, garments: List<Garment>, pose: Pose)
+        +toString(): String
+    }
+
+    +class LookCollection{
+        -looks: List<Look>
+        +addLook(l: look): void
+        +removeLook(l: Look): boolean
+        +getLooks(): List<Look>
+    }
+
+    +class Brand{
+        -name: String
+        +Brand(name: String)
+        +toString(): String
+    }
+    +class BrandPreference{
+        -favoriteBrands: List<Brand>
+        +addBrand(b: Brand): void
+        +removeBrand(b: Brand): boolean
+        +getFavoriteBrands(): List<Brand>
     }
 }
 
@@ -422,4 +453,12 @@ DatabaseAccountDataLoader ..|> AccountDataLoader
 
 SimpleSuggestionStrategy ..|> SuggestionStrategy
 SuggestionView ..> SuggestionStrategy
+
+LookCollection -->"*" Look
+Look --> "*" Garment
+Look --> Pose
+TryOnView --> LookCollection
+
+Account --> BrandPreference
+BrandPreference -->"*" Brand
 @enduml

@@ -9,7 +9,8 @@ package presentation
         -closet: Closet
         -closetView: ClosetView
         -personView: PersonView
-        +HomeView(c: Closet)
+        -nav: NavigationController
+        +HomeView(c: Closet, nav: NavigationController)
         +update(): void
         -addGarment(): void
         -addFavorite(): void
@@ -20,7 +21,8 @@ package presentation
     ~class LoginView
     {
         -accountCollection: AccountCollection
-        +LoginView(ac: AccountCollection)
+        -nav: NavigationController
+        +LoginView(ac: AccountCollection, nav: NavigationController)
         +update(): void
         -promptForUserInput(): void
         -checkAccount(): void
@@ -31,7 +33,8 @@ package presentation
     ~class SetupView
     {
         -accountCollection: AccountCollection
-        +SetupView(ac: AccountCollection)
+        -nav: NavigationController
+        +SetupView(ac: AccountCollection, nav: NavigationController)
         -promptForUserInput(): void
         -addUserPreference(): void
 
@@ -56,13 +59,11 @@ package presentation
     }
     ~class TryOnView
     {
-        -closet: Closet
-        -lookCollection: LookCollection
-        -clothesView: ClothesView
-        -personView: PersonView
-        -suggestionView: SuggestionView
-        -posesView: PosesView
-        +TryOnView(c: Closet, p: PoseCollection, ac: AccountCollection)
+        -tryOnController: TryOnController
+        -nav: NavigationController
+
+        +TryOnView(tc: TryOnController, nav: NavigationController)
+        +update(): void
         -displayPoses(): void
         -displayOutfitSuggestions(): void
         -saveCurrentLook(): void
@@ -95,12 +96,41 @@ package presentation
     ~class SettingView
     {
         -accountCollection: AccountCollection
-        +SettingView(ac: AccountCollection)
+        -nav: NavigationController
+        +SettingView(ac: AccountCollection, nav: NavigationController)
         +update(): void
     }
 
 }
+package controller{
+    class NavigationController {
+        -accounts: AccountCollection
+        -closet: Closet
+        -poses: PoseCollection
+        -looks: LookCollection
+        -strategy: SuggestionStrategy
+        +NavigationController(ac: AccountCollection, c: Closet, p: PoseCollection, lc: LookCollection, s: SuggestionStrategy)
+        +showLogin(): void
+        +showSetup(): void
+        +showHome(): void
+        +showTryOn(): void
+        +showSettings(): void
+    }
 
+    class TryOnController {
+        -closet: Closet
+        -poses: PoseCollection
+        -looks: LookCollection
+        -strategy: SuggestionStrategy
+        +TryOnController(c: Closet, p: PoseCollection, lc: LookCollection, s: SuggestionStrategy)
+        +getClothesForBodyPart(part: String): List<Garment>
+        +getAvailablePoses(): List<Pose>
+        +applyPose(p: Pose): void
+        +generateSuggestedOutfit(): Look
+        +saveCurrentLook(l: Look): void
+    }
+
+}
 package domain
 {
     +class Closet
@@ -382,18 +412,30 @@ Main ..> DatabaseAccountDataWriter
 Main ..> DatabaseGarmentDataLoader
 Main ..> DatabasePoseDataLoader
 Main ..> DatabaseAccountDataLoader
+Main ..> NavigationController
+Main ..> TryOnController
 
-LoginView ..> SetupView
-LoginView ..> HomeView
 HomeView --> ClosetView
 HomeView --> PersonView
-HomeView ..> TryOnView
-HomeView ..> SettingView
-TryOnView --> ClothesView
-TryOnView --> PersonView
-TryOnView --> SuggestionView
-TryOnView ..> PosesView
 
+LoginView --> NavigationController
+SetupView --> NavigationController
+HomeView  --> NavigationController
+TryOnView --> NavigationController
+SettingView --> NavigationController
+
+TryOnView --> TryOnController
+
+NavigationController --> AccountCollection
+NavigationController --> Closet
+NavigationController --> PoseCollection
+NavigationController --> LookCollection
+NavigationController --> SuggestionStrategy
+
+TryOnController --> Closet
+TryOnController --> PoseCollection
+TryOnController --> LookCollection
+TryOnController --> SuggestionStrategy
 
 Closet -->"*" Garment
 Closet --> GarmentDataWriter
@@ -461,4 +503,26 @@ TryOnView --> LookCollection
 
 Account --> BrandPreference
 BrandPreference -->"*" Brand
+
+Main ..> NavigationController
+Main ..> TryOnController
+
+LoginView --> NavigationController
+SetupView --> NavigationController
+HomeView  --> NavigationController
+TryOnView --> NavigationController
+SettingView --> NavigationController
+
+TryOnView --> TryOnController
+
+NavigationController --> AccountCollection
+NavigationController --> Closet
+NavigationController --> PoseCollection
+NavigationController --> LookCollection
+NavigationController --> SuggestionStrategy
+
+TryOnController --> Closet
+TryOnController --> PoseCollection
+TryOnController --> LookCollection
+TryOnController --> SuggestionStrategy
 @enduml

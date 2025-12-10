@@ -15,6 +15,9 @@ export default function TryOnPage() {
   const [selectedClothingId, setSelectedClothingId] = useState<number | null>(null);
   const [activeTryOnClothing, setActiveTryOnClothing] = useState<any>(null);
   const [favoriteClothes, setFavoriteClothes] = useState<number[]>([]);
+  const [isPoseModalOpen, setIsPoseModalOpen] = useState(false);
+  const [activePose, setActivePose] = useState(mockPoses[0]);
+
 
   return (
   <div className="flex h-screen p-6 gap-6">
@@ -57,10 +60,16 @@ export default function TryOnPage() {
             </div>
           )}
           
-          <PoseViewer image={mockPoses[0].image} />
+          <PoseViewer image={activePose.image} />
         </div>
 
-        <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+        {/* <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+          Change Pose
+        </button> */}
+        <button
+          onClick={() => setIsPoseModalOpen(true)}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
+        >
           Change Pose
         </button>
       </div>
@@ -85,6 +94,50 @@ export default function TryOnPage() {
         ))}
       </div>
     </div>
+
+    {/* Pose Selection Modal */}
+    {isPoseModalOpen && (
+      <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div className="bg-white rounded-xl p-6 w-[90%] max-w-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-4 text-gray-900">
+            Choose a Pose
+          </h2>
+
+          {/* Pose Grid */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            {mockPoses.map((pose) => (
+              <img
+                key={pose.id}
+                src={pose.image}
+                alt={pose.name}
+                onClick={() => {
+                  setActivePose(pose);
+                  setIsPoseModalOpen(false);
+                }}
+                className={`h-28 object-contain rounded-lg cursor-pointer border-2 transition
+                  ${
+                    activePose.id === pose.id
+                      ? "border-blue-500"
+                      : "border-transparent hover:border-gray-300"
+                  }
+                `}
+              />
+            ))}
+          </div>
+
+          {/* Cancel Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => setIsPoseModalOpen(false)}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
   </div>
 );
 

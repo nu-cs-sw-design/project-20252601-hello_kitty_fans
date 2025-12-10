@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="bg-gray-100 text-gray-900">
         <header className="bg-white shadow p-4">
-          <h1 className="text-xl font-bold">Virtual Closet</h1>
+          <h1 className="text-xl font-bold text-gray-900">Virtual Closet</h1>
         </header>
         <main className="p-4">{children}</main>
       </body>

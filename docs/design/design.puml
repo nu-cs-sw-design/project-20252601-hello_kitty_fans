@@ -139,7 +139,7 @@ package domain
         -loader: GarmentDataLoader
         -saver: GarmentDataWriter
         +Closet(gl: GarmentDataLoader, gw: GarmentDataWriter)
-       +add(sn: String, spec: GarmentSpec) <<throws>> IllegalArgumentException: void
+        +add(sn: String, spec: GarmentSpec) <<throws>> IllegalArgumentException: void
         +remove(sn: SerialNumber): boolean
         +search(spec: GarmentSpec): Set<Garment>
 

@@ -93,7 +93,7 @@ export default function TryOnPage() {
       <h2 className="text-lg font-semibold mb-4 text-gray-900">Recommended</h2>
       <div className="grid grid-cols-2 gap-4">
         {mockRecommendations.map((r) => (
-          <ClothesCard id={r.id} name={r.name} image={r.image} />
+          <RecommendationCard id={r.id} name={r.name} image={r.image} />
         ))}
       </div>
     </div>

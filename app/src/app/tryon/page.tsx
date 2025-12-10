@@ -17,6 +17,8 @@ export default function TryOnPage() {
   const [favoriteClothes, setFavoriteClothes] = useState<number[]>([]);
   const [isPoseModalOpen, setIsPoseModalOpen] = useState(false);
   const [activePose, setActivePose] = useState(mockPoses[0]);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  const [clothes, setClothes] = useState(mockClothes);
 
 
   return (
@@ -25,7 +27,7 @@ export default function TryOnPage() {
     <div className="w-1/4 bg-white rounded-xl p-4 shadow-md overflow-y-auto">
       <h2 className="text-lg font-semibold mb-4 text-gray-900">Your Closet</h2>
       <div className="grid grid-cols-2 gap-4">
-        {mockClothes.map((c) => (
+        {clothes.map((c) => (
           <ClothesCard
             id={c.id}
             name={c.name}
@@ -43,6 +45,7 @@ export default function TryOnPage() {
               )
             }
             onTryOn={() => setActiveTryOnClothing(c)}
+            onDelete={() => setDeleteTargetId(c.id)}
           />
         ))}
       </div>
@@ -129,7 +132,7 @@ export default function TryOnPage() {
           <div className="flex justify-end">
             <button
               onClick={() => setIsPoseModalOpen(false)}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
+              className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition"
             >
               Cancel
             </button>
@@ -137,6 +140,43 @@ export default function TryOnPage() {
         </div>
       </div>
     )}
+
+    {/* Delete Confirmation Modal */}
+    {deleteTargetId !== null && (
+      <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-xl shadow-lg w-[90%] max-w-sm">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Delete this item?
+          </h2>
+
+          <p className="text-sm text-gray-600 mb-6">
+            This action cannot be undone.
+          </p>
+
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => setDeleteTargetId(null)}
+              className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={() => {
+                setClothes((prev) =>
+                  prev.filter((item) => item.id !== deleteTargetId)
+                );
+                setDeleteTargetId(null);
+              }}
+              className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
 
   </div>
 );

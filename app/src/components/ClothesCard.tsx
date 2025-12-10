@@ -7,6 +7,7 @@ interface Props {
   onSelect: () => void;
   onToggleFavorite: () => void;
   onTryOn: () => void;
+  onDelete: () => void;
 }
 
 export default function ClothesCard({
@@ -17,6 +18,7 @@ export default function ClothesCard({
   onSelect,
   onToggleFavorite,
   onTryOn,
+  onDelete,
 }: Props) {
   return (
     <div
@@ -25,6 +27,17 @@ export default function ClothesCard({
         ${isSelected ? "ring-2 ring-blue-500 scale-105" : "bg-white hover:shadow-lg"}
       `}
     >
+      {/* Delete Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+        className="absolute top-1 left-1 text-sm bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600"
+      >
+        ✕
+      </button>
+
       {/* Favorite Heart */}
       <button
         onClick={(e) => {
